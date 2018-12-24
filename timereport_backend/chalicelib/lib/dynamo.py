@@ -1,5 +1,4 @@
 import os
-import logging
 
 from dateutil import parser
 from chalicelib.model import Dynamo
