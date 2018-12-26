@@ -4,6 +4,7 @@ before_install:
   - export PATH=$PATH:$HOME/.local/bin
   - docker pull amazon/dynamodb-local
   - docker run -d -p 8000:8000 amazon/dynamodb-local
+  - pip install -r requirements.tx
   - cd timereport_backend
   - chalice deploy
 language: python
