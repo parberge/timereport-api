@@ -5,8 +5,9 @@ from chalicelib.model import Dynamo
 
 db = Dynamo.EventModel
 db.Meta.host = os.getenv('DB_URL', 'http://dynamodb.eu-north-1.amazonaws.com')
-db.Meta.aws_access_key_id = os.getenv('AWS_ACCESS_KEY', 'my_access_key_id')
-db.Meta.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', 'my_secret_access_key')
+db.Meta.region = os.getenv('DB_REGION', 'eu-north-1')
+#db.Meta.aws_access_key_id = os.getenv('AWS_ACCESS_KEY', 'my_access_key_id')
+#db.Meta.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', 'my_secret_access_key')
 
 # create the table
 if not db.exists():

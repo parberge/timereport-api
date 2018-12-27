@@ -25,11 +25,7 @@ Make sure to run chalice as well.
 Point os.environ['DB_URL'] to your production amazonaws database. 
 #
 DB_URL = http://dynamodb.eu-north-1.amazonaws.com
-#
-Set aws credentials as os.environ:
-#
-AWS_ACCESS_KEY = my_access_key_id
-AWS_SECRET_ACCESS_KEY = my_secret_access_key
+DB_REGION = 'eu-north-1'
 #
 #
 or configure ~/.aws/credentials file with content:

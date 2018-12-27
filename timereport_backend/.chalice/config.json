@@ -1,15 +1,12 @@
 {
   "version": "2.0",
   "app_name": "timereport_backend",
+  "region": "eu-north-1",
   "stages": {
     "dev": {
+      "autogen_policy": true,
       "api_gateway_stage": "api",
-      "environment_variables": {
-                                "BACKEND_DEBUG": "True",
-                                "DB_URL": "http://dynamodb.eu-north-1.amazonaws.com",
-                                "AWS_ACCESS_KEY": "my_access_key",
-                                "AWS_SECRET_ACCESS_KEY": "my_secret_access_key"
-      }
+      "environment_variables": { "BACKEND_DEBUG": "True", "DB_URL": "http://dynamodb.eu-north-1.amazonaws.com" }
     }
   }
 }
