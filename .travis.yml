@@ -3,6 +3,8 @@
 language: python
 python:
 - '3.6'
+before_install:
+  - cd timereport_backend
 install:
   - pip install -r requirements.txt
   - chalice deploy
