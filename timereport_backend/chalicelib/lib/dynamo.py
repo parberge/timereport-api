@@ -4,8 +4,7 @@ from dateutil import parser
 from chalicelib.model import Dynamo
 
 db = Dynamo.EventModel
-db.Meta.host = os.getenv('DB_URL', 'http://dynamodb.eu-north-1.amazonaws.com')
-db.Meta.region = os.getenv('DB_REGION', 'eu-north-1')
+
 #db.Meta.aws_access_key_id = os.getenv('AWS_ACCESS_KEY', 'my_access_key_id')
 #db.Meta.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', 'my_secret_access_key')
 
@@ -14,8 +13,10 @@ if not db.exists():
     db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 def get_id(user_id):
-    for i in db.scan((db.user_id == user_id)):
-        return i.attribute_values
+    the_list = []
+    for i in db.scan(db.user_id == user_id):
+        the_list.append(i.attribute_values)
+    return the_list
 
 def get_user_between_date(user_id, start_date, end_date):
     result = []

@@ -1,3 +1,4 @@
+import os
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute
 
@@ -7,6 +8,8 @@ class EventModel(Model):
     """
     class Meta:
       table_name = "event"
+      #host = os.getenv('DB_URL', 'http://dynamodb.eu-north-1.amazonaws.com')
+      region = os.getenv('DB_REGION', 'eu-north-1')
 
     user_id = UnicodeAttribute(hash_key=True)
     event_date = UTCDateTimeAttribute(range_key=True)
