@@ -1,15 +1,18 @@
 import os
+import boto3
+
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute
+
+
 
 class EventModel(Model):
     """
     A DynamoDB Event Table
     """
-    class Meta:
-      table_name = "event"
-      #host = os.getenv('DB_URL', 'http://dynamodb.eu-north-1.amazonaws.com')
-      region = os.getenv('DB_REGION', 'eu-north-1')
+    class Meta(object):
+        table_name = os.getenv('DB_TABLE_NAME', 'event')
+        region = os.getenv('DB_REGION', 'eu-north-1')
 
     user_id = UnicodeAttribute(hash_key=True)
     event_date = UTCDateTimeAttribute(range_key=True)
@@ -17,12 +20,14 @@ class EventModel(Model):
     reason = UnicodeAttribute()
     hours = UnicodeAttribute()
 
-    def get_all_data(self):
-        event_data = {}
-        event_data['user_id'] = self.event.user_id
-        event_data['event_date'] = self.event.event_date
-        event_data['user_name'] = self.event.user_name
-        event_data['reason'] = self.event.reason
-        event_data['hours'] = self.event.hours
+class DynamoBoto(EventModel.Meta):
+    """
+    A Boto3 DynamoDB resource
+    """
+    region = EventModel.Meta.region
+    table_name = EventModel.Meta.table_name
 
-        return event_data
+    dynamodb = boto3.resource("dynamodb", region_name=region)
+    table = dynamodb.Table(table_name)
+
+

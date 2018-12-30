@@ -1,5 +1,4 @@
 import os
-
 from chalice import Chalice
 from chalicelib.lib import dynamo
 
@@ -26,9 +25,7 @@ def get_user_by_id(user_id):
         end_date = app.current_request.query_params.get('endDate')
         return dynamo.get_user_between_date(user_id, start_date, end_date)
     else:
-        ret = []
-        ret.append(dynamo.get_id(user_id))
-        return app.log.debug(ret[0])
+        return dynamo.get_id(user_id)
 
 @app.route('/timereport/event', methods=['POST'])
 def create_event():

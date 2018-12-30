@@ -1,28 +1,21 @@
-import os
+import json
 
 from dateutil import parser
 from chalicelib.model import Dynamo
+from botocore.exceptions import ClientError
 
 db = Dynamo.EventModel
-
-#db.Meta.aws_access_key_id = os.getenv('AWS_ACCESS_KEY', 'my_access_key_id')
-#db.Meta.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', 'my_secret_access_key')
+dynamoboto = Dynamo.DynamoBoto
 
 # create the table
 if not db.exists():
     db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 def get_id(user_id):
-    the_list = []
-    for i in db.scan(db.user_id == user_id):
-        the_list.append(i.attribute_values)
-    return the_list
+    return scan(user_id)
 
 def get_user_between_date(user_id, start_date, end_date):
-    result = []
-    for i in db.scan((db.user_id == user_id) & (db.event_date.between(start_date, end_date))):
-        result.append(i.attribute_values)
-    return result
+    pass
 
 def create_event(events):
     user_id = events.get('user_id')
@@ -38,3 +31,12 @@ def create_event(events):
     # save tables to database
     event.save()
 
+def scan(query):
+    try:
+      response = dynamoboto.table.scan(query)
+    except ClientError as e:
+      print(e.response['Error']['Message'])
+    else:
+      item = response['Items']
+      print("GetItem succeeded:")
+      return json.dumps(item, indent=4)
