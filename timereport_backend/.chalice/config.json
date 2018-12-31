@@ -4,7 +4,7 @@
   "region": "eu-north-1",
   "stages": {
     "dev": {
-      "autogen_policy": "false",
+      "autogen_policy": false,
       "api_gateway_stage": "api",
       "environment_variables": { "BACKEND_DEBUG": "True", "DB_URL": "http://dynamodb.eu-north-1.amazonaws.com" }
     }
