@@ -20,7 +20,7 @@
         "dynamodb:Query"
       ],
       "Resource": [
-        "arn:aws:dynamodb:*:*:table/event",
+        "arn:aws:dynamodb:*:*:table/event"
       ],
       "Effect": "Allow"
     }
