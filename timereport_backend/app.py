@@ -18,6 +18,13 @@ DELETE     /timereport/event/<_id>
 app = Chalice(app_name='timereport_backend')
 app.debug = os.getenv('BACKEND_DEBUG', False)
 
+@app.route('/table-name')
+def test_name():
+    """
+    :return: table name
+    """
+    return dynamo.dynamoboto.table.name
+
 @app.route('/timereport/user/{user_id}', methods=['GET'])
 def get_user_by_id(user_id):
     if app.current_request.query_params:
