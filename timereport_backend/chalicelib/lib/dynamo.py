@@ -3,6 +3,10 @@ import json
 from dateutil import parser
 from chalicelib.model import Dynamo
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Attr
+import logging
+
+log = logging.getLogger(__name__)
 
 db = Dynamo.EventModel
 dynamoboto = Dynamo.DynamoBoto
@@ -12,10 +16,26 @@ if not db.exists():
     db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 def get_id(user_id):
-    return scan(user_id)
+    try:
+      response = dynamoboto.table.scan(user_id)
+    except ClientError as e:
+      log.debug(e.response['Error']['Message'])
+    else:
+      item = response['Items']
+      log.debug("GetItem succeeded:")
+      return json.dumps(item, indent=4)
 
 def get_user_between_date(user_id, start_date, end_date):
-    pass
+    try:
+        response = dynamoboto.table.scan(FilterExpression=Attr('event_date').between(start_date, end_date)
+                                       & Attr('user_id').eq(user_id)
+                                       )
+    except ClientError as e:
+        log.debug(e.response['Error']['Message'])
+    else:
+        item = response['Items']
+        log.debug(f"GetItem succeeded: {item}")
+        return json.dumps(item, indent=4)
 
 def create_event(events):
     user_id = events.get('user_id')
@@ -30,13 +50,3 @@ def create_event(events):
     event.hours = hours
     # save tables to database
     event.save()
-
-def scan(query):
-    try:
-      response = dynamoboto.table.scan(query)
-    except ClientError as e:
-      print(e.response['Error']['Message'])
-    else:
-      item = response['Items']
-      print("GetItem succeeded:")
-      return json.dumps(item, indent=4)
