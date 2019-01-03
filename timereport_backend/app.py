@@ -3,14 +3,19 @@ from chalice import Chalice
 from chalicelib.lib import dynamo
 
 """
+GET        /table-name  : returns name of dynamodb table (good for testing connection)
 GET        /user/<user_id>
 GET        /user/<user_id>?startDate=YYYYMMDD&endDate=YYYYMMDD
 POST       /event
-GET        /event/?startDate=YYYYMMDD&endDate=YYYYMMDD
+#######################
+# We don't insert any _id at this time
+# Do we really need GET/PUT/DELETE for event?
+# is not user_id + event_date sufficient to PUT/DELETE an event?
 GET        /event/<_id>
+GET        /event/?startDate=YYYYMMDD&endDate=YYYYMMDD
 PUT        /event/<_id>
 DELETE     /event/<_id>
-GET        /table-name  : returns name of dynamodb table (good for testing connection)
+
 
 {'user_id': 'U2FGC795G', 'user_name': 'kamger', 'reason': 'vab', 'event_date': datetime.datetime(2018, 12, 5, 0, 0), 'hours': '8'}
 {"user_id": "U2FGC795G", "user_name": "kamger", "reason": "vab", "event_date": "2018-12-03", "hours":8}
