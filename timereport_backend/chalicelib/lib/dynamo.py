@@ -5,6 +5,7 @@ from chalicelib.model import Dynamo
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Attr
 import logging
+import ast
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +39,9 @@ def get_user_between_date(user_id, start_date, end_date):
         return json.dumps(item, indent=4)
 
 def create_event(events):
+    # running curl_localhost sends this as string representation of dict
+    if isinstance(events, str):
+        events = ast.literal_eval(events)
     user_id = events.get('user_id')
     event_date = parser.parse(events.get('event_date'))
     user_name = events.get('user_name')
