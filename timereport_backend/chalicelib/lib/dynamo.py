@@ -50,3 +50,13 @@ def create_event(events):
     event.hours = hours
     # save tables to database
     event.save()
+
+def delete_event(user_id, date):
+    try:
+      response = dynamoboto.table.delete_item(Attr('event_date').eq(date) & Attr('user_id').eq(user_id))
+    except ClientError as e:
+      log.debug(e.response['Error']['Message'])
+    else:
+      item = response['Items']
+      log.debug("Delete item succeeded:")
+      return json.dumps(item, indent=4)
