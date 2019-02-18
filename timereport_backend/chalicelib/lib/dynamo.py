@@ -34,16 +34,16 @@ def get_user_between_date(user_id, start_date, end_date):
         return json.dumps(item, indent=4)
 
 def create_event(events):
-    log.info(f'event in create_event backend is {events}')
+    log.debug(f'event in create_event backend is {events}')
     # running curl_localhost sends this as string representation of dict
     if isinstance(events, str):
         events = ast.literal_eval(events)
     user_id = events.get('user_id')
-    event_date = parser.parse(events.get('event_date'))
+    event_date = events.get('event_date')
     user_name = events.get('user_name')
     reason = events.get('reason')
     hours = events.get('hours')
-
+    log.info(f'event_date is {event_date}')
     event = Dynamo.EventModel(hash_key=user_id, range_key=event_date)
     event.user_name = user_name
     event.reason = reason

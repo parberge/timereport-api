@@ -2,7 +2,7 @@ import os
 from chalice import Chalice
 from chalicelib.lib import dynamo
 from chalicelib.model import Dynamo
-
+import logging
 """
 GET        /table-name  : returns name of dynamodb table (good for testing connection)
 GET        /user/<user_id>
@@ -24,7 +24,7 @@ DELETE     /event/<_id>
 
 app = Chalice(app_name='timereport_backend')
 app.debug = os.getenv('BACKEND_DEBUG', False)
-
+log = logging.getLogger(__name__)
 
 db = Dynamo.EventModel
 # create the table

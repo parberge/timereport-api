@@ -15,7 +15,7 @@ class EventModel(Model):
         region = os.getenv('DB_REGION', 'eu-north-1')
 
     user_id = UnicodeAttribute(hash_key=True)
-    event_date = UTCDateTimeAttribute(range_key=True)
+    event_date = UnicodeAttribute(range_key=True)
     user_name = UnicodeAttribute()
     reason = UnicodeAttribute()
     hours = UnicodeAttribute()
