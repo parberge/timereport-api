@@ -1,6 +1,7 @@
 import json
 
 from dateutil import parser
+from chalicelib.model import Dynamo
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Attr
 import logging
