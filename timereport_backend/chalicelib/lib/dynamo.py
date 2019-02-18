@@ -14,6 +14,7 @@ dynamoboto = Dynamo.DynamoBoto
 
 # create the table
 if not db.exists():
+    log.info('database table do not exist, creating it')
     db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 def get_id(user_id):
@@ -39,6 +40,7 @@ def get_user_between_date(user_id, start_date, end_date):
         return json.dumps(item, indent=4)
 
 def create_event(events):
+    log.info(f'event in create_event backend is {events}')
     # running curl_localhost sends this as string representation of dict
     if isinstance(events, str):
         events = ast.literal_eval(events)
