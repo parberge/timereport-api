@@ -3,7 +3,7 @@ import json
 from dateutil import parser
 from chalicelib.model import Dynamo
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Attr, Key
 import logging
 import ast
 
@@ -13,7 +13,7 @@ dynamoboto = Dynamo.DynamoBoto
 
 def get_id(user_id):
     try:
-      response = dynamoboto.table.scan(user_id)
+      response = dynamoboto.table.scan(FilterExpression=Key('user_id').eq(user_id))
     except ClientError as e:
       log.debug(e.response['Error']['Message'])
     else:
