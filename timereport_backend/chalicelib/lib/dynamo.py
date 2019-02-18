@@ -1,7 +1,6 @@
 import json
 
 from dateutil import parser
-from chalicelib.model import Dynamo
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Attr
 import logging
@@ -9,13 +8,7 @@ import ast
 
 log = logging.getLogger(__name__)
 
-db = Dynamo.EventModel
 dynamoboto = Dynamo.DynamoBoto
-
-# create the table
-if not db.exists():
-    log.info('database table do not exist, creating it')
-    db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 def get_id(user_id):
     try:

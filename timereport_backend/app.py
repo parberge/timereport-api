@@ -1,6 +1,7 @@
 import os
 from chalice import Chalice
 from chalicelib.lib import dynamo
+from chalicelib.model import Dynamo
 
 """
 GET        /table-name  : returns name of dynamodb table (good for testing connection)
@@ -23,6 +24,13 @@ DELETE     /event/<_id>
 
 app = Chalice(app_name='timereport_backend')
 app.debug = os.getenv('BACKEND_DEBUG', False)
+
+
+db = Dynamo.EventModel
+# create the table
+if not db.exists():
+    log.info('database table do not exist, creating it')
+    db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 @app.route('/table-name')
 def test_name():
