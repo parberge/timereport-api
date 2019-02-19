@@ -52,6 +52,7 @@ def create_event(events):
     event.save()
 
 def delete_event(user_id, date):
+    log.info(f'inside delete_event in dynamo backend: user_id is {user_id}, date is {date}')
     try:
       response = dynamoboto.table.delete_item(Key={'event_date':date, 'user_id':user_id})
     except ClientError as e:
