@@ -58,6 +58,5 @@ def delete_event(user_id, date):
     except ClientError as e:
       log.debug(e.response['Error']['Message'])
     else:
-      item = response['Items']
-      log.debug("Delete item succeeded:")
-      return json.dumps(item, indent=4)
+      log.debug(f"Delete item succeeded with response: {response}")
+      return json.dumps(response, indent=4)
