@@ -65,4 +65,5 @@ def put_event_by_id(_id):
 def delete_event_by_id(_id):
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('date')
+        app.log.info(f'delete event backend: date is {date} and id is {_id}')
         return dynamo.delete_event(_id, start_date)
