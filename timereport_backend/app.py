@@ -61,8 +61,8 @@ def get_event_by_id(_id):
 def put_event_by_id(_id):
     return app.current_request.json_body
 
-@app.route('/event/{user_id}', methods=['DELETE'])
-def delete_event_by_id(user_id):
+@app.route('/event/{_id}', methods=['DELETE'])
+def delete_event_by_id(_id):
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('date')
-        return dynamo.delete_event(user_id, start_date)
+        return dynamo.delete_event(_id, start_date)
