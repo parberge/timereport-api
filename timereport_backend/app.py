@@ -32,15 +32,16 @@ if not db.exists():
     log.info('database table do not exist, creating it')
     db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
-@app.route('/table-name')
+@app.route('/table-name', cors=True)
 def test_name():
     """
     :return: table name
     """
-    return dynamo.dynamoboto.table.name
+    return {'name': dynamo.dynamoboto.table.name }
 
-@app.route('/user/{user_id}', methods=['GET'])
+@app.route('/user/{user_id}', methods=['GET'], cors=True)
 def get_user_by_id(user_id):
+
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('startDate')
         end_date = app.current_request.query_params.get('endDate')
@@ -48,20 +49,20 @@ def get_user_by_id(user_id):
     else:
         return dynamo.get_id(user_id)
 
-@app.route('/event', methods=['POST'])
+@app.route('/event', methods=['POST'], cors=True)
 def create_event():
     dynamo.create_event(app.current_request.json_body)
     return app.current_request.json_body
 
-@app.route('/event/{_id}', methods=['GET'])
+@app.route('/event/{_id}', methods=['GET'], cors=True)
 def get_event_by_id(_id):
     return {'event_id': _id}
 
-@app.route('/event/{_id}', methods=['PUT'])
+@app.route('/event/{_id}', methods=['PUT'], cors=True)
 def put_event_by_id(_id):
     return app.current_request.json_body
 
-@app.route('/event/{_id}', methods=['DELETE'])
+@app.route('/event/{_id}', methods=['DELETE'], cors=True)
 def delete_event_by_id(_id):
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('date')

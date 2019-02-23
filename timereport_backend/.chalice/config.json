@@ -2,11 +2,20 @@
   "version": "2.0",
   "app_name": "timereport_backend",
   "region": "eu-north-1",
+  "environment_variables": {
+      "BACKEND_DEBUG": "True",
+      "DB_URL": "http://dynamodb.eu-north-1.amazonaws.com"
+  },
   "stages": {
     "dev": {
       "autogen_policy": false,
       "api_gateway_stage": "api",
-      "environment_variables": { "BACKEND_DEBUG": "True", "DB_URL": "http://dynamodb.eu-north-1.amazonaws.com" }
+      "environment_variables": { "DB_TABLE_NAME": "dev_event" }
+    },
+    "prod": {
+      "autogen_policy": false,
+      "api_gateway_stage": "api",
+      "environment_variables": { "DB_TABLE_NAME": "prod_event" }
     }
   }
 }

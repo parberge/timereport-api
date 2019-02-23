@@ -11,7 +11,7 @@ class EventModel(Model):
     A DynamoDB Event Table
     """
     class Meta(object):
-        table_name = os.getenv('DB_TABLE_NAME', 'event')
+        table_name = os.getenv('DB_TABLE_NAME', 'dev_event')
         region = os.getenv('DB_REGION', 'eu-north-1')
 
     user_id = UnicodeAttribute(hash_key=True)

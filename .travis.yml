@@ -1,5 +1,3 @@
-#services:
-#- docker
 language: python
 python:
 - '3.6'
@@ -7,8 +5,6 @@ before_install:
   - cd timereport_backend
 install:
   - pip install -r requirements.txt
-script:
-  - chalice deploy
 env:
   global:
   - secure: mrBiGDHPAkdlaJqtc0I9H2hF8SCfru20I4IF6HBxxIpV+JPGMha5iUpwEN7cx3mEjJZUu/AnouSvYtU82upLi082+erGYmpxNkV0xJFZ+xdPnv3AmHlU6OI1t7ggDWGKdGdzdVRjQEXQVTRA5ffSsPQPppkp8MTc/7QmNGfK2rvLeEJRECGBXd81gsu0Sr9dgmEKVEVUh/kgsmVAJzcpVthGHvvydPLlHvcOxnjd6zsynzywzaD19iM5MsLVQbv8Z5SVqtJZuUm240SsohP4s25slo80Jv7gRbEQY0oukSdgYQEWqQamEd+WuRnuVWhb/C6TzMeWZDcy7tfcbL8woCI5YF+nBWXzWSvNj6rIubHZVQjf5n0r6oc4CyLbTMESkxt6ySOTuZa1kLZbTfCnoHPnuibcYSHDc6oAuE04+LMq+31xFhjEd3dPCpkNDBOImPEpw4E7ymhwh+Rj8+Z/r70qX0LNHVXJ1bTdXWCj6Qqp+dVYrB9FkxoE7/Lu28ej5tVLsPzlaqfH5c/QnC4fZeHpSasPbvxGUD5TG3uAZcYrFowsWQ2sl8MRseY/No3EjnywHbwYkFPQoyXkwT1qb9sxIDyiEsfpxssL7ERYBHJ5FKKooAh2qyO5wMJ2RYfcB/PQfwGp+TKhEv/idqvucyw3bnkNSMcpLoHGzwsnFMY=
@@ -17,3 +13,20 @@ env:
 notifications:
   slack:
     secure: HJHvn6wKNCIr3skGWx2HK8gz9KIdg8Yd73gBoUTyUgz39v16WkISHOVsSDDTg4RunX/nggO5XBwjc9HwZeiX2V4OjzAukOaufk/OOvz2Hl4vhkUIJWgho3KFJAcm+dOi3wwJHGFBtLW3yvprEnjIf6MQoQqsnXK21nzihgvO1kBS8UYagJvtFf0Tqhz3Biz1lcEJi5cTpkfaG9fCBit4qzQig5jZeBiVb2/aKiQYDhAvc6O9VijJj8TCCPWhPpQGAOUR+yjKZQGnSTmSEU1iJbvEngpmliARP3vAUS28Ahrw84C0LchdgBA3E1LcKxjZokRfaxKAHMEWg69ovufrwLoo6Eb6vLQR3qhvDrwrPV3zG7kgiiRStxtz2mjeAljcLqoKQ0BrUNxEEF4bHyVVAc5zpIalIWD/YzUw+WOrMcAA+Oti4XAbuD7tSoZrkqCutBmxonHLjITatGMzndKBMhHIJu5v7y77ibX1ZyRixBqZ/B9v+0HOEn61nZErlpy0L+TMRX/bWPyOFMqAQO6gz1mnEwwSeU/HBs020/yGrcAWCjU8bCukOJ8ax4fIpOSPgU3tKc5759I3YOE3s+QM4TWZ97CHk54c9t2nvW6sE0mZdjSIjVMW/5Rq4a9CIJaYnvgKjGgzq+rqlSugOxZL95gqBwQLqt3iHmpjNB54pto=
+
+stages:
+  - name: Dev
+    if: type = pull_request
+  - name: Prod
+    if: type = push AND branch = master
+
+jobs:
+  include:
+    - stage: Dev
+      script:
+      - chalice deploy --stage dev
+    - stage: Prod
+      on:
+        branch: master
+      script: 
+      - chalice deploy --stage prod
