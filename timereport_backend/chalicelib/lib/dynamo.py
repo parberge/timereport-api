@@ -27,10 +27,8 @@ def get_user_names():
     except ClientError as e:
         log.debug(e.response['Error']['Message'])
     else:
-      mylist = [item['user_name'] for item in response['Items']]
-      mylist_unique = list(set(mylist))
       log.debug("GetItem succeeded:")
-      return json.dumps(mylist_unique, indent=4)
+      return {item['user_name']: item['user_id'] for item in response['Items']}
 
 def get_user_between_date(user_id, start_date, end_date):
     try:
