@@ -39,6 +39,10 @@ def test_name():
     """
     return {'name': dynamo.dynamoboto.table.name }
 
+@app.route('/user/names', methods=['GET'], cors=True)
+def get_user_names():
+    return dynamo.get_user_names()
+
 @app.route('/user/{user_id}', methods=['GET'], cors=True)
 def get_user_by_id(user_id):
 
