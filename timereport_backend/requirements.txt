@@ -1,4 +1,0 @@
-pynamodb
-chalice
-boto3
-botocore
