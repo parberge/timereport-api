@@ -28,4 +28,5 @@ jobs:
         branch: master
       script: 
       - chalice deploy --stage dev
+      - echo 'sleep to mitigate too many requests' && sleep 10
       - chalice deploy --stage prod
