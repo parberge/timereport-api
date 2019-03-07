@@ -27,4 +27,5 @@ jobs:
       on:
         branch: master
       script: 
+      - chalice deploy --stage dev
       - chalice deploy --stage prod
