@@ -1,8 +1,10 @@
-NAME=timereport_backend
+NAME=timereport-api
 VERSION=0.0.1
 
-WORKDIR = timereport_backend
-PORT = 8010
+DB_PORT = 8000
+API_PORT = 8010
+
+export DB_HOST = http://localhost:$(DB_PORT)
 
 .PHONY: pull run stop restart rm
 
@@ -10,8 +12,10 @@ pull:
 	docker pull amazon/dynamodb-local
 
 run:
-	docker run --name dynamodb-local -d -p $(PORT):$(PORT) amazon/dynamodb-local
-	cd $(WORKDIR) && chalice local
+	docker run --rm --name dynamodb-local -d -p $(DB_PORT):$(DB_PORT) amazon/dynamodb-local
+	echo "Wait for local DB to start..."
+	sleep 5
+	chalice local --port $(API_PORT)
 
 stop:
 	docker stop dynamodb-local
@@ -19,8 +23,6 @@ stop:
 restart:
 	docker restart dynamodb-local
 
-rm:
-	docker rm dynamodb-local
 
 default: run
-clean: stop rm
+clean: stop

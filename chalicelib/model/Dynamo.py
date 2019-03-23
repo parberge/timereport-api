@@ -12,6 +12,7 @@ class EventModel(Model):
     """
     class Meta(object):
         table_name = os.getenv('DB_TABLE_NAME', 'dev_event')
+        host = os.getenv('DB_HOST', None)
         region = os.getenv('DB_REGION', 'eu-north-1')
 
     user_id = UnicodeAttribute(hash_key=True)
@@ -26,7 +27,8 @@ class DynamoBoto(EventModel.Meta):
     """
     region = EventModel.Meta.region
     table_name = EventModel.Meta.table_name
-    dynamodb = boto3.resource("dynamodb", region_name=region)
+    host = EventModel.Meta.host
+    dynamodb = boto3.resource("dynamodb", region_name=region, endpoint_url=host)
     table = dynamodb.Table(table_name)
 
 
