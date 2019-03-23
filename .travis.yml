@@ -22,7 +22,7 @@ jobs:
     - stage: Deploy to dev
       script:
       - chalice deploy --stage dev
-    - stage: Prod
+    - stage: Deploy to prod
       on:
         branch: master
       script: 
