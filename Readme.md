@@ -46,3 +46,10 @@ __note__: This requires that you have setup the credentials for AWS
 `chalice deploy --stage dev`
 ### PROD
 `chalice deploy --stage prod`
+
+### Run unit tests
+#### prerequisite
+Install the packages (use pipenv)
+__IMPORTANT!__ : Make sure you have started your local development environment
+Run pytest:
+`pytest -v tests`
