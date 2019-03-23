@@ -34,10 +34,10 @@ make clean
 Deployment to dev and prod is done automatically
 
 ### DEV
-To deploy to dev, open A pull request and it will automtically deploy
+Deploy to dev will happen when a push/merge even happens on master branch
 
 ### PRODUCTION
-to deploy to prod, push/merge to master.
+Deploy to production will happen if a tag is created on the master branch
 
 ### Manually
 __note__: This requires that you have setup the credentials for AWS
