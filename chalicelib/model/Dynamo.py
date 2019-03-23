@@ -27,7 +27,8 @@ class DynamoBoto(EventModel.Meta):
     """
     region = EventModel.Meta.region
     table_name = EventModel.Meta.table_name
-    dynamodb = boto3.resource("dynamodb", region_name=region)
+    host = EventModel.Meta.host
+    dynamodb = boto3.resource("dynamodb", region_name=region, endpoint_url=host)
     table = dynamodb.Table(table_name)
 
 
