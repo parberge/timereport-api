@@ -42,12 +42,12 @@ def test_name():
 # TODO: Remove this endpoint when clients are using new endpoint
 @app.route('/user/names', methods=['GET'], cors=True)
 def get_user_names():
-    return dynamo.get_user_names()
+    return dynamo.get_user_ids()
 
 
 @app.route('/event/users', methods=['GET'], cors=True)
 def get_user_ids():
-    return dynamo.get_user_names()
+    return dynamo.get_user_ids()
 
 
 @app.route('/event/users/{user_id}', methods=['GET'], cors=True)
