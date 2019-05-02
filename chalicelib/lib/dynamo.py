@@ -18,7 +18,7 @@ def get_id(user_id, start_date=None, end_date=None):
     if start_date and end_date:
         expression = Attr('event_date').between(start_date, end_date) & Attr('user_id').eq(user_id)
     else:
-        expression = Key('user_id').eq(user_id))
+        expression = Key('user_id').eq(user_id)
 
     try:
       response = dynamoboto.table.scan(FilterExpression=expression)
