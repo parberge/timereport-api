@@ -67,13 +67,6 @@ def create_event(user_id):
     dynamo.create_event(app.current_request.json_body, user_id)
     return app.current_request.json_body
 
-@app.route('/event/{_id}', methods=['GET'], cors=True)
-def get_event_by_id(_id):
-    return {'event_id': _id}
-
-@app.route('/event/{_id}', methods=['PUT'], cors=True)
-def put_event_by_id(_id):
-    return app.current_request.json_body
 
 @app.route('/event/{_id}', methods=['DELETE'], cors=True)
 def delete_event_by_id(_id):
