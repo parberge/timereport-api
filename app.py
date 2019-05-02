@@ -53,6 +53,18 @@ def get_user_by_id(user_id):
     else:
         return dynamo.get_id(user_id)
 
+@app.route('/event/user/{user_id}', methods=['GET'], cors=True)
+def get_events_by_user_id(user_id):
+    start_date = None
+    end_date = None
+    if app.current_request.query_params:
+        log.debug(f"Got request params: {app.current_request.query_params}")
+        start_date = app.current_request.query_params.get('startDate')
+        end_date = app.current_request.query_params.get('endDate')
+
+    return dynamo.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
+
+
 @app.route('/event', methods=['POST'], cors=True)
 def create_event():
     dynamo.create_event(app.current_request.json_body)

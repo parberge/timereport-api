@@ -11,9 +11,17 @@ log = logging.getLogger(__name__)
 
 dynamoboto = Dynamo.DynamoBoto
 
-def get_id(user_id):
+def get_id(user_id, start_date=None, end_date=None):
+    """
+    Get items for user. Optionally between start and end date.
+    """
+    if start_date and end_date:
+        expression = Attr('event_date').between(start_date, end_date) & Attr('user_id').eq(user_id)
+    else:
+        expression = Key('user_id').eq(user_id))
+
     try:
-      response = dynamoboto.table.scan(FilterExpression=Key('user_id').eq(user_id))
+      response = dynamoboto.table.scan(FilterExpression=expression)
     except ClientError as e:
       log.debug(e.response['Error']['Message'])
     else:
