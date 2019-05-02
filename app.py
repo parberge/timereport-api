@@ -62,9 +62,9 @@ def get_events_by_user_id(user_id):
     return dynamo.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
 
 
-@app.route('/event', methods=['POST'], cors=True)
-def create_event():
-    dynamo.create_event(app.current_request.json_body)
+@app.route('/event/users/{user_id}', methods=['POST'], cors=True)
+def create_event(user_id):
+    dynamo.create_event(app.current_request.json_body, user_id)
     return app.current_request.json_body
 
 @app.route('/event/{_id}', methods=['GET'], cors=True)

@@ -41,12 +41,11 @@ def get_user_ids():
       log.debug("GetItem succeeded:")
       return {item['user_name']: item['user_id'] for item in response['Items']}
 
-def create_event(events):
+def create_event(events, user_id):
     log.debug(f'event in create_event backend is {events}')
     # running curl_localhost sends this as string representation of dict
     if isinstance(events, str):
         events = ast.literal_eval(events)
-    user_id = events.get('user_id')
     event_date = events.get('event_date')
     user_name = events.get('user_name')
     reason = events.get('reason')
