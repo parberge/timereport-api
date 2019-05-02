@@ -29,7 +29,10 @@ def get_id(user_id, start_date=None, end_date=None):
       log.debug("GetItem succeeded:")
       return json.dumps(item, indent=4)
 
-def get_user_names():
+def get_user_ids():
+    """
+    Get all user IDs
+    """
     try:
         response = dynamoboto.table.scan()
     except ClientError as e:
