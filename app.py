@@ -68,9 +68,9 @@ def create_event(user_id):
     return app.current_request.json_body
 
 
-@app.route('/event/{_id}', methods=['DELETE'], cors=True)
-def delete_event_by_id(_id):
+@app.route('/event/users/{user_id}', methods=['DELETE'], cors=True)
+def delete_event_by_id(user_id):
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('date')
-        app.log.info(f'delete event backend: date is {start_date} and id is {_id}')
-        return dynamo.delete_event(_id, start_date)
+        app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
+        return dynamo.delete_event(_id, start_date)        
