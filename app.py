@@ -39,21 +39,18 @@ def test_name():
     """
     return {'name': dynamo.dynamoboto.table.name }
 
+# TODO: Remove this endpoint when clients are using new endpoint
 @app.route('/user/names', methods=['GET'], cors=True)
 def get_user_names():
     return dynamo.get_user_names()
 
-@app.route('/user/{user_id}', methods=['GET'], cors=True)
-def get_user_by_id(user_id):
 
-    if app.current_request.query_params:
-        start_date = app.current_request.query_params.get('startDate')
-        end_date = app.current_request.query_params.get('endDate')
-        return dynamo.get_user_between_date(user_id, start_date, end_date)
-    else:
-        return dynamo.get_id(user_id)
+@app.route('/event/users', methods=['GET'], cors=True)
+def get_user_ids():
+    return dynamo.get_user_names()
 
-@app.route('/event/user/{user_id}', methods=['GET'], cors=True)
+
+@app.route('/event/users/{user_id}', methods=['GET'], cors=True)
 def get_events_by_user_id(user_id):
     start_date = None
     end_date = None
