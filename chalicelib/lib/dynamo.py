@@ -38,18 +38,6 @@ def get_user_names():
       log.debug("GetItem succeeded:")
       return {item['user_name']: item['user_id'] for item in response['Items']}
 
-def get_user_between_date(user_id, start_date, end_date):
-    try:
-        response = dynamoboto.table.scan(FilterExpression=Attr('event_date').between(start_date, end_date)
-                                       & Attr('user_id').eq(user_id)
-                                       )
-    except ClientError as e:
-        log.debug(e.response['Error']['Message'])
-    else:
-        item = response['Items']
-        log.debug(f"GetItem succeeded: {item}")
-        return json.dumps(item, indent=4)
-
 def create_event(events):
     log.debug(f'event in create_event backend is {events}')
     # running curl_localhost sends this as string representation of dict
