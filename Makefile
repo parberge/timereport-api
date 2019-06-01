@@ -13,9 +13,9 @@ pull:
 
 run:
 	docker run --rm --name dynamodb-local -d -p $(DB_PORT):$(DB_PORT) amazon/dynamodb-local
-	echo "Wait for local DB to start..."
+	# Wait for local DB to start
 	sleep 5
-	chalice local --port $(API_PORT)
+	chalice local --port $(API_PORT) --no-autoreload
 
 stop:
 	docker stop dynamodb-local
