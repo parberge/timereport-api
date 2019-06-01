@@ -2,7 +2,7 @@ import os
 import boto3
 
 from pynamodb.models import Model
-from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute
+from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
 
 
@@ -20,6 +20,7 @@ class EventModel(Model):
     user_name = UnicodeAttribute()
     reason = UnicodeAttribute()
     hours = UnicodeAttribute()
+    lock = BooleanAttribute(default=False)
 
 class DynamoBoto(EventModel.Meta):
     """
