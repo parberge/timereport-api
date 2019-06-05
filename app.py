@@ -53,9 +53,3 @@ def delete_event_by_id(user_id):
         start_date = app.current_request.query_params.get('date')
         app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
         return dynamo.delete_event(user_id, start_date)
-
-@app.route('/event/users/{user_id}', methods=['PUT'], cors=True)
-def put_event_in_locked_state(user_id):
-    if app.current_request.query_params:
-        start_date = app.current_request.query_params.get('date')
-        app.log.info(f'lock event backend: date is {start_date} and id is {user_id}')
