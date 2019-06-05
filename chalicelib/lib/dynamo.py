@@ -67,3 +67,6 @@ def delete_event(user_id, date):
     else:
       log.debug(f"Delete item succeeded with response: {response}")
       return json.dumps(response, indent=4)
+
+def put_lock(user_id, date):
+    log.info(f'inside put lock in dynamo backend: user_id is {user_id}, date is {date}')
