@@ -56,11 +56,11 @@ def delete_event_by_id(user_id):
         app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
         return dynamo_event.delete_event(user_id, start_date)
 
-@app.route('/lock/users/{user_id}/{event_date}', methods=['GET'])
+@app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
 def get_lock(user_id, event_date):
     return dynamo_lock.get_lock(user_id=user_id, event_date=event_date)
 
-@app.route('/lock', methods=['POST'])
+@app.route('/lock', methods=['POST'], cors=True)
 def create_lock():
     dynamo_lock.create_lock(app.current_request.json_body)
     return app.current_request.json_body
