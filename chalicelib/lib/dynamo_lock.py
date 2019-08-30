@@ -22,7 +22,7 @@ def create_lock(lock_request):
 def get_lock(user_id, date):
     log.info(f'inside delete_event in dynamo backend: user_id is {user_id}, date is {date}')
     try:
-      response = dynamoboto.table.(Key={'event_date':date, 'user_id':user_id})
+      response = dynamoboto.table(Key={'event_date':date, 'user_id':user_id})
     except ClientError as e:
       log.debug(e.response['Error']['Message'])
     else:
@@ -43,30 +43,3 @@ def get_id(user_id, event_date):
       item = response['Items']
       log.debug("GetItem succeeded:")
       return json.dumps(item, indent=4)
-
-
-
-
-
-
-
-
-
-
-def get_lock(user_id, event_date):
-    """
-    Get items for user. Optionally between start and end date.
-    """
-    expression = Attr('event_date').eq(event_date) & Attr('user_id').eq(user_id)
-    try:
-      dynamo_lock = Dynamo.LockModel(hash_key=user_id, range_key=event_date)
-      response = dynamoboto.table.scan(FilterExpression=expression)
-    except ClientError as e:
-      log.debug(e.response['Error']['Message'])
-    else:
-      item = response['Items']
-      log.debug("GetItem succeeded:")
-      return json.dumps(item, indent=4)
-
-
-
