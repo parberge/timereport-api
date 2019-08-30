@@ -11,7 +11,7 @@ class EventModel(Model):
     A DynamoDB Event Table
     """
     class Meta(object):
-        table_name = os.getenv('DB_TABLE_NAME', 'dev_event')
+        table_name = os.getenv('DB_EVENT_TABLE_NAME', 'dev_event')
         host = os.getenv('DB_HOST', None)
         region = os.getenv('DB_REGION', 'eu-north-1')
 
@@ -27,7 +27,7 @@ class LockModel(Model):
     A DynamoDB Lock model
     """
     class Meta(object):
-        table_name = os.getenv('DB_TABLE_NAME', 'dev_lock')
+        table_name = os.getenv('DB_LOCK_TABLE_NAME', 'dev_lock')
         host = os.getenv('DB_HOST', None)
         region = os.getenv('DB_REGION', 'eu-north-1')
     user_id = UnicodeAttribute(hash_key=True)
