@@ -1,5 +1,5 @@
 import os
-import chalicelib.lib.dynamo as dynamo
+import chalicelib.lib.dynamo_event as dynamo
 import requests
 
 local_api = 'http://localhost:8010'

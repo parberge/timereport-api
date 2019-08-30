@@ -9,7 +9,7 @@ import ast
 
 log = logging.getLogger(__name__)
 
-dynamoboto = Dynamo.DynamoBoto
+dynamoboto = Dynamo.DynamoBotoEvent
 
 def get_id(user_id, start_date=None, end_date=None):
     """
@@ -58,6 +58,14 @@ def create_event(events, user_id):
     # save tables to database
     event.save()
 
+def create_lock(lock_request):
+    log.debug(f'lock_request: {lock_request}')
+    # running curl_localhost sends this as string representation of dict
+    date = lock_request.get('event_date')
+    user_id = lock_request.get('user_id')
+    lock = Dynamo.LockModel(hash_key=user_id, range_key=event_date)
+    lock.save()
+
 def delete_event(user_id, date):
     log.info(f'inside delete_event in dynamo backend: user_id is {user_id}, date is {date}')
     try:
@@ -67,3 +75,30 @@ def delete_event(user_id, date):
     else:
       log.debug(f"Delete item succeeded with response: {response}")
       return json.dumps(response, indent=4)
+
+
+
+
+
+
+
+
+
+
+def get_lock(user_id, event_date):
+    """
+    Get items for user. Optionally between start and end date.
+    """
+    expression = Attr('event_date').eq(event_date) & Attr('user_id').eq(user_id)
+    try:
+      dynamo_lock = Dynamo.LockModel(hash_key=user_id, range_key=event_date)
+      response = dynamoboto.table.scan(FilterExpression=expression)
+    except ClientError as e:
+      log.debug(e.response['Error']['Message'])
+    else:
+      item = response['Items']
+      log.debug("GetItem succeeded:")
+      return json.dumps(item, indent=4)
+
+
+

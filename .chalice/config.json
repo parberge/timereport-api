@@ -9,13 +9,12 @@
   "stages": {
     "dev": {
       "autogen_policy": false,
-      "api_gateway_stage": "api",
-      "environment_variables": { "DB_TABLE_NAME": "dev_event" }
+      "api_gateway_stage": "api"
     },
     "prod": {
       "autogen_policy": false,
       "api_gateway_stage": "api",
-      "environment_variables": { "DB_TABLE_NAME": "prod_event" }
+      "environment_variables": { "DB_EVENT_TABLE_NAME": "prod_event", "DB_LOCK_TABLE_NAME": "prod_lock" }
     }
   }
 }
