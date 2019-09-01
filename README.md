@@ -20,7 +20,7 @@ Expects `Content-Type: appplication/json`
 
 ###### Tables
 ```
-GET    /table-events
+GET    /table-names
 ```
 
 ###### Events
