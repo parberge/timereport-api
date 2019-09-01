@@ -12,6 +12,36 @@ An API for timereport
 - aws credentials for travis-ci
 - edit .chalice/config.json env variables
 
+## RESTful resources
+
+Resources exposed through the api
+
+Expects `Content-Type: appplication/json`
+
+###### Tables
+```
+GET    /table-events
+```
+
+###### Events
+```
+GET    /events
+POST   /events
+GET    /events/users
+GET    /events/users/<name>
+GET    /events/users/<name>/<date>
+DELETE /events/users/<name>/<date>
+GET    /events/<date>
+```
+
+###### Locks
+```
+GET    /locks
+GET    /locks/date/<date>
+GET    /locks/users
+DELETE /locks/users/<user>/<date>
+DELETE /locks/dates/<date>
+```
 
 ## Local development
 
