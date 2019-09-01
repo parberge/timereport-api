@@ -93,6 +93,13 @@ def get_all_locks():
     return json.dumps(locks)
 
 
+def get_all_locks_by_date(date):
+    locks = []
+    for lock in LockModel.scan():
+        locks.append(lock.attribute_values)
+    return json.dumps(locks)
+
+
 def get_lock(user_id, event_date):
     try:
         lock = LockModel.get(user_id, event_date)
@@ -109,3 +116,10 @@ def delete_lock(user_id, event_date):
             return json.dumps(lock.delete())
     except LockModel.DoesNotExist as e:
         return json.dumps({})
+
+
+def delete_all_locks_by_date(event_date):
+    locks = LockModel.scan(LockModel.event_date == event_date)
+    for lock in locks:
+        lock.delete()
+    return json.dumps({"Method": f"DELETE", "date": f"{event_date}", "Status": "OK"})
