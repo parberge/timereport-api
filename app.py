@@ -74,6 +74,11 @@ def create_lock():
     return app.current_request.json_body
 
 
-@app.route('/lock/{user_id}/{event_date}', methods=['DELETE'], cors=True)
+@app.route('/lock/users/{user_id}/{event_date}', methods=['DELETE'], cors=True)
 def delete_lock(user_id, event_date):
     return db_functions.delete_lock(user_id, event_date)
+
+
+@app.route('/lock/date/{event_date}', methods=['DELETE'], cors=True)
+def delete_all_locks_by_date(event_date):
+    return db_functions.delete_all_locks_by_date(event_date)
