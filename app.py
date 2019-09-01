@@ -58,6 +58,11 @@ def create_event():
     return db_functions.create_event(app.current_request.json_body)
 
 
+@app.route('/lock', methods=['GET'], cors=True)
+def get_all_locks():
+    return db_functions.get_all_locks()
+
+
 @app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
 def get_lock(user_id, event_date):
     return db_functions.get_lock(user_id=user_id, event_date=event_date)

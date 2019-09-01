@@ -86,6 +86,13 @@ def create_lock(lock_request):
         return json.dumps({"error":"Failed to create lock"})
 
 
+def get_all_locks():
+    locks = []
+    for lock in LockModel.scan():
+        locks.append(lock.attribute_values)
+    return json.dumps(locks)
+
+
 def get_lock(user_id, event_date):
     try:
         lock = LockModel.get(user_id, event_date)
