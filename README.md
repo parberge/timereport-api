@@ -37,7 +37,7 @@ GET    /events/<date>
 ###### Locks
 ```
 GET    /locks
-GET    /locks/date/<date>
+GET    /locks/dates
 GET    /locks/users
 DELETE /locks/users/<user>/<date>
 DELETE /locks/dates/<date>
