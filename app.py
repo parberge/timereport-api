@@ -7,7 +7,8 @@ import logging
 
 app = Chalice(app_name='timereport_backend')
 app.debug = os.getenv('BACKEND_DEBUG', False)
-log = logging.getLogger(__name__)
+log_level = logging.DEBUG if app.debug else logging.INFO
+app.log.setLevel(log_level)
 
 db_event = Dynamo.EventModel
 db_lock = Dynamo.LockModel
@@ -15,6 +16,7 @@ db_lock = Dynamo.LockModel
 # create tables
 for db in [db_event, db_lock]:
     if not db.exists():
+        app.log.debug(f"Creating db table: {db.Meta.table_name}")
         db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 
@@ -36,7 +38,7 @@ def get_events_by_user_id(user_id):
     start_date = None
     end_date = None
     if app.current_request.query_params:
-        log.debug(f"Got request params: {app.current_request.query_params}")
+        app.log.debug(f"Got request params: {app.current_request.query_params}")
         start_date = app.current_request.query_params.get('startDate')
         end_date = app.current_request.query_params.get('endDate')
 
@@ -55,6 +57,7 @@ def delete_event_by_id(user_id):
         start_date = app.current_request.query_params.get('date')
         app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
         return dynamo_event.delete_event(user_id, start_date)
+
 
 @app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
 def get_lock(user_id, event_date):

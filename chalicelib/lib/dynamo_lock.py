@@ -7,7 +7,7 @@ from boto3.dynamodb.conditions import Attr, Key
 import logging
 import ast
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f'timereport_backend.{__name__}')
 
 dynamoboto = Dynamo.DynamoBotoLock
 
