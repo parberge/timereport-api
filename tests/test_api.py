@@ -1,5 +1,3 @@
-import os
-import chalicelib.lib.dynamo_event as dynamo
 import requests
 
 local_api = 'http://localhost:8010'
@@ -11,7 +9,7 @@ check_local_db = requests.get(f"{local_db}/shell/")
 if check_local_db.status_code != 200:
     raise Exception("Local DB check failed")
 
-check_local_api = requests.get(f"{local_api}/table-name")
+check_local_api = requests.get(f"{local_api}/table-names")
 if check_local_api.status_code != 200:
     raise Exception("Local API check failed")
 
