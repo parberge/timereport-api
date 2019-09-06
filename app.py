@@ -103,7 +103,7 @@ def get_event_by_user_id_and_date(user_id, event_date):
     return db.get_event_by_user_id_and_date(user_id, event_date)
 
 
-@app.route('/users/{user_id}/events/{date}', methods=['DELETE'], cors=True)
+@app.route('/users/{user_id}/events/{event_date}', methods=['DELETE'], cors=True)
 def delete_event_by_user_id_and_date(user_id, event_date):
     """
     Method
