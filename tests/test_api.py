@@ -13,7 +13,23 @@ check_local_api = requests.get(f"{local_api}/table-names")
 if check_local_api.status_code != 200:
     raise Exception("Local API check failed")
 
-def test_get_id(caplog):
-    response = requests.get(f"{local_api}/event/users/fake_user")
-    assert response is not None
-    assert response.text == '[]'
+
+def test_create_event():
+    data = {
+        "reason": "sick",
+        "hours": "8",
+        "user_name": "Mr User",
+        "user_id": "user101",
+        "event_date": "2019-03-21"
+    }
+    r = requests.post(f"{local_api}/events", json=data)
+    assert r.status_code == 200
+
+
+def test_create_lock():
+    data = {
+        "user_id": "user101",
+        "event_date": "2019-03"
+    }
+    r = requests.post(f"{local_api}/events", json=data)
+    assert r.status_code == 200
