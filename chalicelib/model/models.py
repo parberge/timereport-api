@@ -3,6 +3,7 @@ import os
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
+
 class EventModel(Model):
     """
     A DynamoDB Event Table
