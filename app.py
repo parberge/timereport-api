@@ -10,9 +10,9 @@ app.debug = os.getenv('BACKEND_DEBUG', False)
 log = logging.getLogger(__name__)
 
 
-for db in [EventModel, LockModel]:
-    if not db.exists():
-        db.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+for db_instance in [EventModel, LockModel]:
+    if not db_instance.exists():
+        db_instance.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
 
 @app.route('/table-names', cors=True)
