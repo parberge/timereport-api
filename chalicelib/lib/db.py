@@ -21,6 +21,10 @@ def list_users():
 
 
 def get_user(user_id):
+    """
+    :param user_id:
+    :return: status
+    """
     e = EventModel.scan(EventModel.user_id == user_id, limit=1)
     if len(e) > 0:
         return json.dumps({"message": f"{user_id} exists", "status": "OK"})
@@ -28,28 +32,34 @@ def get_user(user_id):
         return json.dumps({'message': f"{user_id} does not exist", "status": "NOT FOUND"})
 
 
-def list_all_events():
-    events = []
-    for event in EventModel.scan():
-        events.append(event.attribute_values)
-    return json.dumps(events)
-
-
-def get_all_events_by_user_id(user_id):
+def list_events_by_user_id(user_id):
+    """
+    :param user_id:
+    :return: list of events
+    """
     events = []
     for event in EventModel.scan(EventModel.user_id == user_id):
         events.append(event.attribute_values)
     return json.dumps(events)
 
 
-def     list_all_events_by_date(event_date):
-    events = []
-    for event in EventModel.scan(EventModel.event_date == event_date):
-        events.append(event.attribute_values)
-    return json.dumps(events)
+def delete_all_events_by_user_id(user_id):
+    """
+    :param user_id:
+    :return: status
+    """
+    events = EventModel.scan(EventModel.user_id == user_id)
+    for event in events:
+        event.delete()
+    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "Status": "OK"})
 
 
 def get_event_by_user_id_and_date(user_id, event_date):
+    """
+    :param user_id:
+    :param event_date:
+    :return: event
+    """
     try:
         e = EventModel.get(user_id, event_date)
         return e.attribute_values
@@ -57,7 +67,90 @@ def get_event_by_user_id_and_date(user_id, event_date):
         return json.dumps({})
 
 
+def delete_event_by_user_id_and_date(user_id, event_date):
+    """
+    :param user_id:
+    :param event_date:
+    :return: status
+    """
+    events = EventModel.scan(EventModel.user_id == user_id, EventModel.event_date == event_date)
+    for event in events:
+        event.delete()
+    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "date": f"{event_date}", "Status": "OK"})
+
+
+def list_locks_by_user_id(user_id):
+    """
+    :param user_id:
+    :return: list of locks for user
+    """
+    locks = LockModel.scan(LockModel.user_id == user_id)
+    for lock in locks:
+        locks.append(lock.attribute_values)
+    return json.dumps(locks)
+
+
+def delete_all_locks_by_user_id(user_id):
+    """
+    :param user_id:
+    :return: status
+    """
+    locks = LockModel.scan(LockModel.user_id == user_id)
+    for lock in locks:
+        lock.delete()
+    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "Status": "OK"})
+
+
+def get_lock_by_user_id_and_date(user_id, event_date):
+    """
+    :param user_id:
+    :param event_date:
+    :return: lock for user
+    """
+    locks = LockModel.scan(LockModel.user_id == user_id, LockModel.event_date == event_date)
+    for lock in locks:
+        lock.delete()
+    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "date": f"{event_date}", "Status": "OK"})
+
+
+def delete_lock_by_user_id_and_date(user_id, event_date):
+    """
+    :param user_id:
+    :param event_date:
+    :return: status
+    """
+    locks = LockModel.scan(LockModel.user_id == user_id, LockModel.event_date == event_date)
+    for lock in locks:
+        lock.delete()
+    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "date": f"{event_date}", "Status": "OK"})
+
+
+def list_all_events():
+    """
+    :return: list of all events
+    """
+    events = []
+    for event in EventModel.scan():
+        events.append(event.attribute_values)
+    return json.dumps(events)
+
+
+def list_all_events_by_date(event_date):
+    """
+    :param event_date:
+    :return: list of all events for date
+    """
+    events = []
+    for event in EventModel.scan(EventModel.event_date == event_date):
+        events.append(event.attribute_values)
+    return json.dumps(events)
+
+
 def create_event(events):
+    """
+    :param events:
+    :return: status
+    """
     if isinstance(events, str):
         events = ast.literal_eval(events)
     event = EventModel(
@@ -70,20 +163,32 @@ def create_event(events):
     return json.dumps(event.save())
 
 
-def delete_event(user_id, event_date):
+def delete_all_events_by_date(event_date):
     """
-    :param user_id:
     :param event_date:
-    :return bool:
+    :return: status
     """
-    try:
-        e = EventModel.get(user_id, event_date)
-        return json.dumps(e.delete())
-    except EventModel.DoesNotExist as e:
-        return json.dumps({})
+    events = EventModel.scan(EventModel.event_date == event_date)
+    for event in events:
+        event.delete()
+    return json.dumps({"Method": f"DELETE", "date": f"{event_date}", "Status": "OK"})
+
+
+def list_all_locks():
+    """
+    :return: list of all locks
+    """
+    locks = []
+    for lock in LockModel.scan():
+        locks.append(lock.attribute_values)
+    return json.dumps(locks)
 
 
 def create_lock(lock_request):
+    """
+    :param lock_request:
+    :return: status
+    """
     try:
         lock = LockModel(
             hash_key=f"{lock_request.get('user_id')}",
@@ -94,39 +199,22 @@ def create_lock(lock_request):
         return json.dumps({"error":"Failed to create lock"})
 
 
-def list_all_locks():
+def list_all_locks_by_date(event_date):
+    """
+    :param event_date:
+    :return: list of locks for date
+    """
     locks = []
-    for lock in LockModel.scan():
+    for lock in LockModel.scan(LockModel.event_date == event_date):
         locks.append(lock.attribute_values)
     return json.dumps(locks)
-
-
-def get_all_locks_by_date(date):
-    locks = []
-    for lock in LockModel.scan():
-        locks.append(lock.attribute_values)
-    return json.dumps(locks)
-
-
-def get_lock(user_id, event_date):
-    try:
-        lock = LockModel.get(user_id, event_date)
-        if lock:
-            return lock.attribute_values
-    except LockModel.DoesNotExist as e:
-        return json.dumps({})
-
-
-def delete_lock(user_id, event_date):
-    try:
-        lock = LockModel.get(user_id, event_date)
-        if lock:
-            return json.dumps(lock.delete())
-    except LockModel.DoesNotExist as e:
-        return json.dumps({})
 
 
 def delete_all_locks_by_date(event_date):
+    """
+    :param event_date:
+    :return: status
+    """
     locks = LockModel.scan(LockModel.event_date == event_date)
     for lock in locks:
         lock.delete()
