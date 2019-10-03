@@ -1,7 +1,7 @@
 import os
 from chalice import Chalice
 from chalicelib.lib import db
-from chalicelib.model.models import EventModel, LockModel
+from chalicelib.model.models import EventTable, LockTable
 import logging
 
 
@@ -10,7 +10,7 @@ app.debug = os.getenv('BACKEND_DEBUG', False)
 log = logging.getLogger(__name__)
 
 
-for db_instance in [EventModel, LockModel]:
+for db_instance in [EventTable, LockTable]:
     if not db_instance.exists():
         db_instance.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
 
@@ -20,7 +20,7 @@ def test_name():
     """
     :return: table name
     """
-    return {'name': [EventModel.Meta.table_name, LockModel.Meta.table_name]}
+    return {'name': [EventTable.Meta.table_name, LockTable.Meta.table_name]}
 
 
 @app.route('/users', methods=['GET'], cors=True)

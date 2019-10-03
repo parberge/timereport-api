@@ -4,7 +4,7 @@ from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
 
-class EventModel(Model):
+class EventTable(Model):
     """
     A DynamoDB Event Table
     """
@@ -20,7 +20,7 @@ class EventModel(Model):
     hours = UnicodeAttribute()
 
 
-class LockModel(Model):
+class LockTable(Model):
     """
     A DynamoDB Lock model
     """
