@@ -147,7 +147,7 @@ def list_all_events_by_date(event_date):
     return json.dumps(events)
 
 
-def create_event(events):
+def create_event_v2(events):
     """
     :param events:
     :return: status
@@ -169,7 +169,7 @@ def delete_all_events_by_date(event_date):
     :param event_date:
     :return: status
     """
-    events = EventTable.scan(EventTable.event_date == event_date)
+    events = EventTable.scan(str(EventTable.event_date) == event_date)
     for event in events:
         event.delete()
     return json.dumps({"Method": f"DELETE", "date": f"{event_date}", "Status": "OK"})
@@ -197,7 +197,7 @@ def create_lock(lock_request):
         return json.dumps(lock.save())
     except ClientError as e:
         log.debug(e.response['Error']['Message'])
-        return json.dumps({"error":"Failed to create lock"})
+        return json.dumps({"error": "Failed to create lock"})
 
 
 def list_all_locks_by_date(event_date):
@@ -206,7 +206,7 @@ def list_all_locks_by_date(event_date):
     :return: list of locks for date
     """
     locks = []
-    for lock in LockTable.scan(LockTable.event_date == event_date):
+    for lock in LockTable.scan(str(LockTable.event_date) == event_date):
         locks.append(lock.attribute_values)
     return json.dumps(locks)
 
@@ -216,7 +216,65 @@ def delete_all_locks_by_date(event_date):
     :param event_date:
     :return: status
     """
-    locks = LockTable.scan(LockTable.event_date == event_date)
+    locks = LockTable.scan(str(LockTable.event_date) == event_date)
     for lock in locks:
         lock.delete()
     return json.dumps({"Method": f"DELETE", "date": f"{event_date}", "Status": "OK"})
+
+
+##################################################
+#                                                #
+#      TODO: The following code is support for   #
+#            v1 api                              #
+#                                                #
+##################################################
+
+
+def get_id(user_id, start_date=None, end_date=None):
+    """
+    Get items for user. Optionally between start and end date.
+    Status: Implemented
+    """
+    events = []
+    if start_date and end_date:
+        for event in EventTable.scan(
+                (EventTable.event_date.between(start_date, end_date))
+                & (EventTable.user_id == user_id)
+        ):
+            events.append(event.attribute_values)
+    else:
+        event = EventTable.scan(EventTable.user_id == user_id)
+        for e in event:
+            events.append(e.attribute_values)
+
+    return json.dumps(events)
+
+
+def create_event_v1(events, user_id=None):
+    """
+    :param events:
+    :param user_id=None
+    :return: status
+    """
+    if isinstance(events, str):
+        events = ast.literal_eval(events)
+    event = EventTable(
+        user_id=user_id,
+        event_date=f"{events.get('event_date')}",
+        user_name=f"{events.get('user_name')}",
+        reason=f"{events.get('reason')}",
+        hours=f"{events.get('hours')}",
+    )
+    return json.dumps(event.save())
+
+
+# Not implemented
+def delete_event_v1(user_id, date):
+    log.info(f'inside delete_event in dynamo backend: user_id is {user_id}, date is {date}')
+    try:
+        response = dynamoboto.table.delete_item(Key={'event_date': date, 'user_id': user_id})
+    except ClientError as e:
+        log.debug(e.response['Error']['Message'])
+    else:
+        log.debug(f"Delete item succeeded with response: {response}")
+        return json.dumps(response, indent=4)

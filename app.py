@@ -114,14 +114,14 @@ def delete_event_by_user_id_and_date(user_id, event_date):
 
 
 @app.route('/events', methods=['POST'], cors=True)
-def create_event():
+def create_event_v2():
     """
     Method
     POST    /events
     Create event
     data: {"user_id":"foo01","user_name":"Foo Bar","reason":"sick","event_date":"2019-03-21","hours":8}
     """
-    return db.create_event(app.current_request.json_body)
+    return db.create_event_v2(app.current_request.json_body)
 
 
 @app.route('/events', methods=['GET'], cors=True)
@@ -194,3 +194,70 @@ def delete_all_locks_by_date(event_date):
     Delete all locks on date
     """
     return db.delete_all_locks_by_date(event_date)
+
+
+##################################################
+#                                                #
+#      TODO: The following code is support for   #
+#            v1 api-calls and will be removed    #
+#                                                #
+##################################################
+
+# Implemented
+@app.route('/event/users', methods=['GET'], cors=True)
+def get_user_ids():
+    return db.list_users()
+
+
+# Implemented
+@app.route('/event/users/{user_id}', methods=['GET'], cors=True)
+def get_events_by_user_id(user_id):
+    start_date = None
+    end_date = None
+    if app.current_request.query_params:
+        app.log.debug(f"Got request params: {app.current_request.query_params}")
+        start_date = app.current_request.query_params.get('startDate')
+        end_date = app.current_request.query_params.get('endDate')
+
+    return db.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
+
+
+# Implemented
+@app.route('/event/users/{user_id}', methods=['POST'], cors=True)
+def create_event_v1(user_id):
+    """
+    :param user_id:
+    :return:
+    """
+    return db.create_event_v1(app.current_request.json_body, user_id)
+
+
+@app.route('/event/users/{user_id}', methods=['DELETE'], cors=True)
+def delete_event_by_id(user_id):
+    """
+    todo: implement
+    :param user_id:
+    :return:
+    """
+    if app.current_request.query_params:
+        start_date = app.current_request.query_params.get('date')
+        app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
+        return db.delete_event_v1(user_id, start_date)
+
+
+@app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
+def get_lock(user_id, event_date):
+    """
+    todo: implement
+    :param user_id:
+    :param event_date:
+    :return:
+    """
+    return db.get_lock(user_id=user_id, event_date=event_date)
+
+
+# Implemented
+@app.route('/lock', methods=['POST'], cors=True)
+def create_lock():
+    db.create_lock(app.current_request.json_body)
+    return app.current_request.json_body
