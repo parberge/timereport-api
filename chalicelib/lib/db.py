@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 def list_users():
     """
-    Get all user IDs
+    returns list of all users
     """
     user_ids = []
     for item in EventTable.scan():
@@ -22,8 +22,7 @@ def list_users():
 
 def get_user(user_id):
     """
-    :param user_id:
-    :return: status
+    returns user_id or empty
     """
     for user in EventTable.scan(EventTable.user_id == user_id):
         return json.dumps({"message": f"{user_id} exists", "status": "OK"})
@@ -33,7 +32,7 @@ def get_user(user_id):
 def list_events_by_user_id(user_id):
     """
     :param user_id:
-    :return: list of events
+    :return: list of events for user_id
     """
     events = []
     for event in EventTable.scan(EventTable.user_id == user_id):
