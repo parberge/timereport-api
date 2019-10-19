@@ -7,7 +7,8 @@ import logging
 
 app = Chalice(app_name='timereport_backend')
 app.debug = os.getenv('BACKEND_DEBUG', False)
-log = logging.getLogger(__name__)
+log_level = logging.DEBUG if app.debug else logging.INFO
+app.log.setLevel(log_level)
 
 
 for db_instance in [EventTable, LockTable]:
@@ -244,6 +245,7 @@ def delete_event_by_id(user_id):
         start_date = app.current_request.query_params.get('date')
         app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
         return db_v1.delete_event_v1(user_id, start_date)
+
 
 
 @app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
