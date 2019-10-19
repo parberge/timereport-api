@@ -1,6 +1,6 @@
 import os
 from chalice import Chalice
-from chalicelib.lib import db
+from chalicelib.lib import db_v1, db_v2
 from chalicelib.model.models import EventTable, LockTable
 import logging
 
@@ -30,7 +30,7 @@ def list_users():
     GET    /users
     Return list of all users
     """
-    return db.list_users()
+    return db_v2.list_users()
 
 
 @app.route('/users/{user_id}', methods=['GET'], cors=True)
@@ -40,7 +40,7 @@ def get_user(user_id):
     GET    /users/<user_id>
     Return a single user
     """
-    return db.get_user(user_id)
+    return db_v2.get_user(user_id)
 
 
 @app.route('/users/{user_id}/events', methods=['GET'], cors=True)
@@ -50,7 +50,7 @@ def list_events_by_user_id(user_id):
     GET    /users/<user_id>/events
     Return a list of all user_id's events
     """
-    return db.list_events_by_user_id(user_id)
+    return db_v2.list_events_by_user_id(user_id)
 
 
 @app.route('/users/{user_id}/events', methods=['DELETE'], cors=True)
@@ -60,7 +60,7 @@ def delete_all_events_by_user_id(user_id):
     DELETE    /users/<user_id>/events
     Delete all the user_id's events
     """
-    return db.delete_all_events_by_user_id(user_id)
+    return db_v2.delete_all_events_by_user_id(user_id)
 
 
 @app.route('/users/{user_id}/locks', methods=['GET'], cors=True)
@@ -70,7 +70,7 @@ def list_locks_by_user_id(user_id):
     GET    /users/<user_id>/locks
     Return a list of user_id's locks
     """
-    return db.list_locks_by_user_id(user_id)
+    return db_v2.list_locks_by_user_id(user_id)
 
 
 @app.route('/users/{user_id}/locks', methods=['DELETE'], cors=True)
@@ -80,7 +80,7 @@ def delete_all_locks_by_user_id(user_id):
     DELETE    /users/<user_id>/locks
     Delete all locks for user_id
     """
-    return db.delete_all_locks_by_user_id(user_id)
+    return db_v2.delete_all_locks_by_user_id(user_id)
 
 
 @app.route('/users/{user_id}/locks/{event_date}', methods=['DELETE'], cors=True)
@@ -90,7 +90,7 @@ def delete_lock_by_user_id_and_date(user_id, event_date):
     DELETE    /users/<user_id>/locks/<date>
     Delete user_id lock on date
     """
-    return db.delete_lock_by_user_id_and_date(user_id, event_date)
+    return db_v2.delete_lock_by_user_id_and_date(user_id, event_date)
 
 
 @app.route('/users/{user_id}/events/{event_date}', methods=['GET'], cors=True)
@@ -100,7 +100,7 @@ def get_event_by_user_id_and_date(user_id, event_date):
     GET    /users/<user_id>/events/<date>
     Return event for user_id on date
     """
-    return db.get_event_by_user_id_and_date(user_id, event_date)
+    return db_v2.get_event_by_user_id_and_date(user_id, event_date)
 
 
 @app.route('/users/{user_id}/events/{event_date}', methods=['DELETE'], cors=True)
@@ -110,7 +110,7 @@ def delete_event_by_user_id_and_date(user_id, event_date):
     DELETE    /users/<user_id>/events/<date>
     Delete user_id's event on date
     """
-    return db.delete_event_by_user_id_and_date(user_id, event_date)
+    return db_v2.delete_event_by_user_id_and_date(user_id, event_date)
 
 
 @app.route('/events', methods=['POST'], cors=True)
@@ -121,7 +121,7 @@ def create_event_v2():
     Create event
     data: {"user_id":"foo01","user_name":"Foo Bar","reason":"sick","event_date":"2019-03-21","hours":8}
     """
-    return db.create_event_v2(app.current_request.json_body)
+    return db_v2.create_event_v2(app.current_request.json_body)
 
 
 @app.route('/events', methods=['GET'], cors=True)
@@ -131,7 +131,7 @@ def list_all_events():
     GET    /events
     Returns list of all events
     """
-    return db.list_all_events()
+    return db_v2.list_all_events()
 
 
 @app.route('/events/dates/{event_date}', methods=['GET'], cors=True)
@@ -141,7 +141,7 @@ def list_all_events_by_date(event_date):
     GET    /events/dates/<date>
     Returns list of all events on date
     """
-    return db.list_all_events_by_date(event_date)
+    return db_v2.list_all_events_by_date(event_date)
 
 
 @app.route('/events/dates/{event_date}', methods=['DELETE'], cors=True)
@@ -151,7 +151,7 @@ def delete_all_events_by_date(event_date):
     DELETE    /events/dates/<date>
     Delete all events on date
     """
-    return db.delete_all_events_by_date(event_date)
+    return db_v2.delete_all_events_by_date(event_date)
 
 
 @app.route('/locks', methods=['POST'], cors=True)
@@ -162,7 +162,7 @@ def create_lock():
     Create lock
     data: {"user_id":"foo01","event_date":"2019-02"}
     """
-    db.create_lock(app.current_request.json_body)
+    db_v2.create_lock(app.current_request.json_body)
     return app.current_request.json_body
 
 
@@ -173,7 +173,7 @@ def list_all_locks():
     GET    /locks
     Returns list of all locks
     """
-    return db.list_all_locks()
+    return db_v2.list_all_locks()
 
 
 @app.route('/locks/dates/{event_date}', methods=['GET'], cors=True)
@@ -183,7 +183,7 @@ def list_all_locks_by_date(event_date):
     GET    /locks/dates/<date>
     Returns list of all locks on date
     """
-    return db.list_all_locks_by_date(event_date)
+    return db_v2.list_all_locks_by_date(event_date)
 
 
 @app.route('/locks/dates/{event_date}', methods=['DELETE'], cors=True)
@@ -193,7 +193,7 @@ def delete_all_locks_by_date(event_date):
     DELETE    /locks/dates/<date>
     Delete all locks on date
     """
-    return db.delete_all_locks_by_date(event_date)
+    return db_v2.delete_all_locks_by_date(event_date)
 
 
 ##################################################
@@ -206,7 +206,7 @@ def delete_all_locks_by_date(event_date):
 # Implemented
 @app.route('/event/users', methods=['GET'], cors=True)
 def get_user_ids():
-    return db.list_users()
+    return db_v2.list_users()
 
 
 # Implemented
@@ -219,7 +219,7 @@ def get_events_by_user_id(user_id):
         start_date = app.current_request.query_params.get('startDate')
         end_date = app.current_request.query_params.get('endDate')
 
-    return db.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
+    return db_v1.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
 
 
 # Implemented
@@ -229,7 +229,8 @@ def create_event_v1(user_id):
     :param user_id:
     :return:
     """
-    return db.create_event_v1(app.current_request.json_body, user_id)
+    return db_v1.create_event_v1(app.current_request.json_body, user_id)
+
 
 
 @app.route('/event/users/{user_id}', methods=['DELETE'], cors=True)
@@ -242,7 +243,7 @@ def delete_event_by_id(user_id):
     if app.current_request.query_params:
         start_date = app.current_request.query_params.get('date')
         app.log.info(f'delete event backend: date is {start_date} and id is {user_id}')
-        return db.delete_event_v1(user_id, start_date)
+        return db_v1.delete_event_v1(user_id, start_date)
 
 
 @app.route('/lock/users/{user_id}/{event_date}', methods=['GET'], cors=True)
@@ -253,11 +254,11 @@ def get_lock(user_id, event_date):
     :param event_date:
     :return:
     """
-    return db.get_lock(user_id=user_id, event_date=event_date)
+    return db_v1.get_lock(user_id=user_id, event_date=event_date)
 
 
 # Implemented
 @app.route('/lock', methods=['POST'], cors=True)
 def create_lock():
-    db.create_lock(app.current_request.json_body)
+    db_v1.create_lock(app.current_request.json_body)
     return app.current_request.json_body
