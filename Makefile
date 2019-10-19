@@ -11,6 +11,9 @@ export DB_HOST = http://localhost:$(DB_PORT)
 pull:
 	docker pull amazon/dynamodb-local
 
+dynamo:
+	docker run --rm --name dynamodb-local -d -p $(DB_PORT):$(DB_PORT) amazon/dynamodb-local
+
 run:
 	docker run --rm --name dynamodb-local -d -p $(DB_PORT):$(DB_PORT) amazon/dynamodb-local
 	# Wait for local DB to start
@@ -22,6 +25,9 @@ stop:
 
 restart:
 	docker restart dynamodb-local
+
+chalice:
+	chalice local --port $(API_PORT) --no-autoreload
 
 
 default: run
