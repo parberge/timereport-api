@@ -20,10 +20,10 @@ def list_users():
     """
     returns list of all users
     """
-    user_ids = []
+    user_ids = {}
     for item in EventTable.scan():
         if item.user_id not in user_ids:
-            user_ids.append(item.user_id)
+            user_ids[item.user_id] = item.user_name
     return json.dumps(user_ids)
 
 
