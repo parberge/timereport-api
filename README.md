@@ -11,6 +11,7 @@ An API for timereport
 - aws credentials for dynamodb access
 - aws credentials for travis-ci
 - edit .chalice/config.json env variables
+- pre-commit
 
 ## Event model
 ```
