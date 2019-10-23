@@ -22,8 +22,8 @@ def get_id(user_id, start_date=None, end_date=None):
     events = []
     if start_date and end_date:
         for event in EventTable.scan(
-                (EventTable.event_date.between(start_date, end_date))
-                & (EventTable.user_id == user_id)
+            (EventTable.event_date.between(start_date, end_date))
+            & (EventTable.user_id == user_id)
         ):
             events.append(event.attribute_values)
     else:
@@ -53,10 +53,12 @@ def create_event_v1(events, user_id):
 
 
 def delete_event_v1(user_id, date):
-    log.info(f'inside delete_event in dynamo backend: user_id is {user_id}, date is {date}')
+    log.info(
+        f"inside delete_event in dynamo backend: user_id is {user_id}, date is {date}"
+    )
     events = EventTable.scan(
-        (EventTable.user_id == user_id)
-        & (EventTable.event_date == date))
+        (EventTable.user_id == user_id) & (EventTable.event_date == date)
+    )
     for event in events:
         event.delete()
     return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "Status": "OK"})

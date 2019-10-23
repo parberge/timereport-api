@@ -33,7 +33,7 @@ def get_user(user_id):
     """
     for user in EventTable.scan(EventTable.user_id == user_id):
         return json.dumps({"message": f"{user_id} exists", "status": "OK"})
-    return json.dumps({'message': f"{user_id} does not exist", "status": "NOT FOUND"})
+    return json.dumps({"message": f"{user_id} does not exist", "status": "NOT FOUND"})
 
 
 def list_events_by_user_id(user_id):
@@ -78,12 +78,21 @@ def delete_event_by_user_id_and_date(user_id, event_date):
     :return: method, user_id, count, status
     """
     count = 0
-    events = EventTable.scan((EventTable.user_id == user_id) & (EventTable.event_date == event_date))
+    events = EventTable.scan(
+        (EventTable.user_id == user_id) & (EventTable.event_date == event_date)
+    )
     for event in events:
         event.delete()
         count += 1
-    return json.dumps({"method": f"delete", "user_id": f"{user_id}", "count": f"{count}",
-                       "date": f"{event_date}", "status": "ok"})
+    return json.dumps(
+        {
+            "method": f"delete",
+            "user_id": f"{user_id}",
+            "count": f"{count}",
+            "date": f"{event_date}",
+            "status": "ok",
+        }
+    )
 
 
 def list_locks_by_user_id(user_id):
@@ -106,7 +115,14 @@ def delete_all_locks_by_user_id(user_id):
     for lock in LockTable.scan(LockTable.user_id == user_id):
         lock.delete()
         count += 1
-    return json.dumps({"method": f"delete", "user_id": f"{user_id}", "count": f"{count}", "status": "ok"})
+    return json.dumps(
+        {
+            "method": f"delete",
+            "user_id": f"{user_id}",
+            "count": f"{count}",
+            "status": "ok",
+        }
+    )
 
 
 def get_lock_by_user_id_and_date(user_id, event_date):
@@ -115,10 +131,19 @@ def get_lock_by_user_id_and_date(user_id, event_date):
     :param event_date:
     :return: lock for user
     """
-    locks = LockTable.scan(LockTable.user_id == user_id, LockTable.event_date == event_date)
+    locks = LockTable.scan(
+        LockTable.user_id == user_id, LockTable.event_date == event_date
+    )
     for lock in locks:
         lock.delete()
-    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "date": f"{event_date}", "Status": "OK"})
+    return json.dumps(
+        {
+            "Method": f"DELETE",
+            "user_id": f"{user_id}",
+            "date": f"{event_date}",
+            "Status": "OK",
+        }
+    )
 
 
 def delete_lock_by_user_id_and_date(user_id, event_date):
@@ -127,10 +152,19 @@ def delete_lock_by_user_id_and_date(user_id, event_date):
     :param event_date:
     :return: status
     """
-    locks = LockTable.scan((LockTable.user_id == user_id) & (LockTable.event_date == event_date))
+    locks = LockTable.scan(
+        (LockTable.user_id == user_id) & (LockTable.event_date == event_date)
+    )
     for lock in locks:
         lock.delete()
-    return json.dumps({"Method": f"DELETE", "user_id": f"{user_id}", "date": f"{event_date}", "Status": "OK"})
+    return json.dumps(
+        {
+            "Method": f"DELETE",
+            "user_id": f"{user_id}",
+            "date": f"{event_date}",
+            "Status": "OK",
+        }
+    )
 
 
 def list_all_events():
@@ -200,10 +234,11 @@ def create_lock(lock_request):
     try:
         lock = LockTable(
             hash_key=f"{lock_request.get('user_id')}",
-            range_key=f"{lock_request.get('event_date')}")
+            range_key=f"{lock_request.get('event_date')}",
+        )
         return json.dumps(lock.save())
     except ClientError as e:
-        log.debug(e.response['Error']['Message'])
+        log.debug(e.response["Error"]["Message"])
         return json.dumps({"error": "Failed to create lock"})
 
 

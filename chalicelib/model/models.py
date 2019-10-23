@@ -8,10 +8,11 @@ class EventTable(Model):
     """
     A DynamoDB Event Table
     """
+
     class Meta(object):
-        table_name = os.getenv('DB_EVENT_TABLE_NAME', 'dev_event')
-        host = os.getenv('DB_HOST', None)
-        region = os.getenv('DB_REGION', 'eu-north-1')
+        table_name = os.getenv("DB_EVENT_TABLE_NAME", "dev_event")
+        host = os.getenv("DB_HOST", None)
+        region = os.getenv("DB_REGION", "eu-north-1")
 
     user_id = UnicodeAttribute(hash_key=True)
     event_date = UnicodeAttribute(range_key=True)
@@ -24,9 +25,11 @@ class LockTable(Model):
     """
     A DynamoDB Lock model
     """
+
     class Meta(object):
-        table_name = os.getenv('DB_LOCK_TABLE_NAME', 'dev_lock')
-        host = os.getenv('DB_HOST', None)
-        region = os.getenv('DB_REGION', 'eu-north-1')
+        table_name = os.getenv("DB_LOCK_TABLE_NAME", "dev_lock")
+        host = os.getenv("DB_HOST", None)
+        region = os.getenv("DB_REGION", "eu-north-1")
+
     user_id = UnicodeAttribute(hash_key=True)
     event_date = UnicodeAttribute(range_key=True)
