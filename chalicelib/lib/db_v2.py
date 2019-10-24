@@ -132,7 +132,7 @@ def get_lock_by_user_id_and_date(user_id, event_date):
     :return: lock for user
     """
     locks = LockTable.scan(
-        LockTable.user_id == user_id, LockTable.event_date == event_date
+        (LockTable.user_id == user_id) & (LockTable.event_date == event_date)
     )
     for lock in locks:
         lock.delete()

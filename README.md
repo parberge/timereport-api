@@ -74,7 +74,8 @@ DELETE /locks/dates/<date>     # delete all locks by date
 
 To start a local dynamodb and chalice:
 ```
-make run
+$ make dynamo
+$ make chalice
 ```
 Now you should be able to try the API on http://localhost:8010
 
