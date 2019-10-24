@@ -256,11 +256,11 @@ def get_lock(user_id, event_date):
     :param event_date:
     :return:
     """
-    return db_v1.get_lock(user_id=user_id, event_date=event_date)
+    return db_v2.get_lock_by_user_id_and_date(user_id=user_id, event_date=event_date)
 
 
 # Implemented
 @app.route("/lock", methods=["POST"], cors=True)
 def create_lock():
-    db_v1.create_lock(app.current_request.json_body)
+    db_v2.create_lock(app.current_request.json_body)
     return app.current_request.json_body
