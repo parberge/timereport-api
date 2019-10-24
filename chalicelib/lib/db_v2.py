@@ -131,19 +131,13 @@ def get_lock_by_user_id_and_date(user_id, event_date):
     :param event_date:
     :return: lock for user
     """
-    locks = LockTable.scan(
+    scan = LockTable.scan(
         (LockTable.user_id == user_id) & (LockTable.event_date == event_date)
     )
-    for lock in locks:
-        lock.delete()
-    return json.dumps(
-        {
-            "Method": f"DELETE",
-            "user_id": f"{user_id}",
-            "date": f"{event_date}",
-            "Status": "OK",
-        }
-    )
+    locks = []
+    for lock in scan:
+        locks.append(lock.attribute_values)
+    return json.dumps(locks)
 
 
 def delete_lock_by_user_id_and_date(user_id, event_date):
