@@ -51,8 +51,14 @@ def list_events_by_user_id(user_id):
     """
     Method
     GET    /users/<user_id>/events
+    :params from: str, to: str
+      filter on date range
     Return a list of all user_id's events
     """
+    if app.current_request.query_params:
+        date_from = app.current_request.query_params.get("from")
+        date_to = app.current_request.query_params.get("to")
+        return db_v2.list_events_by_user_id(user_id, date_from, date_to)
     return db_v2.list_events_by_user_id(user_id)
 
 
@@ -94,16 +100,6 @@ def delete_lock_by_user_id_and_date(user_id, event_date):
     Delete user_id lock on date
     """
     return db_v2.delete_lock_by_user_id_and_date(user_id, event_date)
-
-
-@app.route("/users/{user_id}/events/{event_date}", methods=["GET"], cors=True)
-def get_event_by_user_id_and_date(user_id, event_date):
-    """
-    Method
-    GET    /users/<user_id>/events/<date>
-    Return event for user_id on date
-    """
-    return db_v2.get_event_by_user_id_and_date(user_id, event_date)
 
 
 @app.route("/users/{user_id}/events/{event_date}", methods=["DELETE"], cors=True)

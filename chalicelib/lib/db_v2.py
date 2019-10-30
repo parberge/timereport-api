@@ -1,9 +1,11 @@
 import ast
 import json
 import logging
+from datetime import datetime
 
 from botocore.exceptions import ClientError
 
+from chalicelib.lib.helpers import date_range
 from chalicelib.model.models import LockTable, EventTable
 
 log = logging.getLogger(__name__)
@@ -36,15 +38,31 @@ def get_user(user_id):
     return json.dumps({"message": f"{user_id} does not exist", "status": "NOT FOUND"})
 
 
-def list_events_by_user_id(user_id):
+def list_events_by_user_id(user_id, date_from=None, date_to=None):
     """
     :param user_id:
+    :param date_from: optional
+    :param date_to: optional
     :return: list of events for user_id
     """
     events = []
-    for event in EventTable.scan(EventTable.user_id == user_id):
-        events.append(event.attribute_values)
-    return json.dumps(events)
+
+    format_str = "%Y-%m-%d"
+
+    if not date_from and not date_to:
+        for event in EventTable.scan(EventTable.user_id == user_id):
+            events.append(event.attribute_values)
+        return json.dumps(events)
+    else:
+        datetime_from = datetime.strptime(date_from, format_str)
+        datetime_to = datetime.strptime(date_to, format_str)
+        for d in date_range(datetime_from, datetime_to):
+            for event in EventTable.scan(
+                (EventTable.user_id == user_id)
+                & (EventTable.event_date == d.strftime(format_str))
+            ):
+                events.append(event.attribute_values)
+        return events
 
 
 def delete_all_events_by_user_id(user_id):
