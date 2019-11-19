@@ -47,21 +47,16 @@ def list_events_by_user_id(user_id, date_from=None, date_to=None):
     """
     events = []
 
-    format_str = "%Y-%m-%d"
-
     if not date_from and not date_to:
-        for event in EventTable.scan(EventTable.user_id == user_id):
+        for event in EventTable.query(user_id):
             events.append(event.attribute_values)
         return json.dumps(events)
     else:
-        datetime_from = datetime.strptime(date_from, format_str)
-        datetime_to = datetime.strptime(date_to, format_str)
-        for d in date_range(datetime_from, datetime_to):
-            for event in EventTable.scan(
-                (EventTable.user_id == user_id)
-                & (EventTable.event_date == d.strftime(format_str))
-            ):
-                events.append(event.attribute_values)
+        for event in EventTable.query(
+            user_id,
+            range_key_condition=EventTable.event_date.between(date_from, date_to),
+        ):
+            events.append(event.attribute_values)
         return events
 
 
