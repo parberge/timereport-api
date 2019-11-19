@@ -112,6 +112,16 @@ def delete_event_by_user_id_and_date(user_id, event_date):
     return db_v2.delete_event_by_user_id_and_date(user_id, event_date)
 
 
+@app.route("/users/{user_id}/events/{event_date}", methods=["GET"], cors=True)
+def get_event_by_user_id_and_date(user_id, event_date):
+    """
+    Method
+    DELETE    /users/<user_id>/events/<date>
+    Delete user_id's event on date
+    """
+    return db_v2.get_event_by_user_id_and_date(user_id, event_date)
+
+
 @app.route("/events", methods=["POST"], cors=True)
 def create_event_v2():
     """
