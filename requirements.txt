@@ -1,4 +1,29 @@
-pynamodb
-chalice
-boto3
-botocore
+-i https://pypi.org/simple
+attrs==19.3.0
+botocore==1.15.31
+certifi==2019.11.28
+chardet==3.0.4
+click==7.1.1
+docutils==0.15.2
+flask-cors==3.0.8
+flask==1.1.1
+idna==2.9
+importlib-metadata==1.6.0 ; python_version < '3.8'
+itsdangerous==1.1.0
+jinja2==3.0.0a1
+jmespath==0.9.5
+markupsafe==1.1.1
+more-itertools==8.2.0
+packaging==20.3
+pluggy==0.13.1
+py==1.8.1
+pynamodb==4.3.1
+pyparsing==2.4.6
+pytest==5.4.1
+python-dateutil==2.8.1
+requests==2.23.0
+six==1.14.0
+urllib3==1.25.8 ; python_version != '3.4'
+wcwidth==0.1.9
+werkzeug==1.0.0
+zipp==3.1.0
