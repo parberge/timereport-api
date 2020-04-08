@@ -1,8 +1,7 @@
 import os
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
-from chalicelib.lib import db_v1, db_v2
-from chalicelib.model.models import EventTable, LockTable
+from chalicelib.lib.helpers import setup_database
 import logging
 
 
@@ -10,15 +9,11 @@ app = Flask("timereport_backend")
 CORS(app)
 app.debug = os.environ.get("BACKEND_DEBUG", False)
 port = int(os.environ.get("PORT", 8080))
+db_engine = os.environ.get("DB_ENGINE", "dynamodb")
 log_level = logging.DEBUG if app.debug else logging.INFO
-app.logger.setLevel(log_level)
+app.logger.setLevel(logging.DEBUG)
 
-
-for db_instance in [EventTable, LockTable]:
-    if not db_instance.exists():
-        db_instance.create_table(
-            read_capacity_units=1, write_capacity_units=1, wait=True
-        )
+db_v2 = setup_database(db_engine=db_engine)
 
 
 @app.route("/table-names")
@@ -26,7 +21,7 @@ def test_name():
     """
     :return: table name
     """
-    return {"name": [EventTable.Meta.table_name, LockTable.Meta.table_name]}
+    return db_v2.get_tables()
 
 
 @app.route("/users", methods=["GET"])
@@ -133,7 +128,7 @@ def create_event_v2():
     Create event
     data: {"user_id":"foo01","user_name":"Foo Bar","reason":"sick","event_date":"2019-03-21","hours":8}
     """
-    return db_v2.create_event_v2(app.current_request.json_body)
+    return db_v2.create_event_v2(request.get_json(force=True))
 
 
 @app.route("/events", methods=["GET"])
@@ -174,8 +169,7 @@ def create_locks():
     Create lock
     data: {"user_id":"foo01","event_date":"2019-02"}
     """
-    db_v2.create_lock(app.current_request.json_body)
-    return app.current_request.json_body
+    return db_v2.create_lock(request.get_json(force=True))
 
 
 @app.route("/locks", methods=["GET"])
@@ -208,52 +202,9 @@ def delete_all_locks_by_date(event_date):
     return db_v2.delete_all_locks_by_date(event_date)
 
 
-##################################################
-#                                                #
-#      TODO: The following code is support for   #
-#            v1 api-calls and will be removed    #
-#                                                #
-##################################################
-
-
 @app.route("/event/users", methods=["GET"])
 def get_user_ids():
     return db_v2.list_users()
-
-
-@app.route("/event/users/{user_id}", methods=["GET"])
-def get_events_by_user_id(user_id):
-    start_date = None
-    end_date = None
-    if app.current_request.query_params:
-        app.logger.debug(f"Got request params: {app.current_request.query_params}")
-        start_date = app.current_request.query_params.get("startDate")
-        end_date = app.current_request.query_params.get("endDate")
-
-    return db_v1.get_id(user_id=user_id, start_date=start_date, end_date=end_date)
-
-
-@app.route("/event/users/{user_id}", methods=["POST"])
-def create_event_v1(user_id):
-    """
-    :param user_id:
-    :return:
-    """
-    return db_v1.create_event_v1(app.current_request.json_body, user_id)
-
-
-@app.route("/event/users/{user_id}", methods=["DELETE"])
-def delete_event_by_id(user_id):
-    """
-    :param user_id:
-    :return:
-    """
-    if app.current_request.query_params:
-        start_date = app.current_request.query_params.get("date")
-        app.logger.info(
-            f"delete event backend: date is {start_date} and id is {user_id}"
-        )
-        return db_v1.delete_event_v1(user_id, start_date)
 
 
 @app.route("/lock/users/{user_id}/{event_date}", methods=["GET"])
@@ -268,8 +219,7 @@ def get_lock(user_id, event_date):
 
 @app.route("/lock", methods=["POST"])
 def create_lock():
-    db_v2.create_lock(app.current_request.json_body)
-    return app.current_request.json_body
+    return db_v2.create_lock(request.get_json(force=True))
 
 
 if __name__ == "__main__":
